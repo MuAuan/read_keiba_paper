@@ -55,30 +55,23 @@ for i, contour in enumerate(contours):
     re = cv2.boundingRect(contour)
     print(re)
     rect.append(re)
-#rect=np.array(rect)
-#print(rect)
+
 rect=sorted(rect, key=itemgetter(0))
-#rect=sorted(rect, key=itemgetter(1))
-#print("rect",rect)
-#print(rect[0][0],rect[0][1],rect[0][2],rect[0][3])
 with open(output_root_path +'./rect.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     #if len(contours) > 0:
     for i in range(len(rect)):
         print(rect[i][0],rect[i][1],rect[i][2],rect[i][3])
-        #rect = cv2.boundingRect(contour)
-        if rect[i][2] < 5 or rect[i][3] < 5:  #rect[2] < 10 or rect[3] < 10:  rect[i][2] < 5 or rect[i][3] < 5
+        if rect[i][2] < 5 or rect[i][3] < 5: 
             continue
-        area = (rect[i][3])*(rect[i][2])  #cv2.contourArea(contour)
+        area = (rect[i][3])*(rect[i][2]) 
         if area < min_area or area > max_area:
             continue
         roi = tmp[rect[i][1]:rect[i][1]+rect[i][3], rect[i][0]:rect[i][0]+rect[i][2]]
         roi=cv2.resize(roi,(5*rect[i][2],5*rect[i][3]),interpolation=cv2.INTER_CUBIC)
         cv2.imshow("roi",roi)
         img_dst=cv2.rectangle(tmp, (rect[i][0], rect[i][1]), (rect[i][0]+rect[i][2], rect[i][1]+rect[i][3]), (0, 255, 0), 2)
-        #print(rect[i])
         cv2.imshow("IMAGE",img_dst)
-        #print(roi.shape)
         writer.writerow(map(lambda x: x, rect[i]))
         plt.imshow(tmp)
         plt.pause(1)
